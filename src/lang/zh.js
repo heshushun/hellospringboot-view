@@ -33,6 +33,8 @@ export default {
     createTask: '创建任务',
     editTask: '修改任务',
     task: '任务管理',
+    company: '公司管理',
+    companyList: '上市公司',
     newsList: '新闻列表',
     createNews: '创建新闻',
     editNews: '修改新闻',

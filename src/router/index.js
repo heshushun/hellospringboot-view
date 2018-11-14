@@ -81,6 +81,20 @@ export const asyncRouterMap = [
     ]
   },
 
+  {
+    path: '/company',
+    component: Layout,
+    redirect: '/company/companyList',
+    name: 'company',
+    meta: {
+      title: 'company',
+      icon: 'tab'
+    },
+    children: [
+      { path: 'companyList', component: () => import('@/views/company/companyList'), name: 'companyList', meta: { title: 'companyList', icon: 'list' }}
+    ]
+  },
+
   /* {
     path: '/permission',
     component: Layout,
