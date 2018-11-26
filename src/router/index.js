@@ -95,6 +95,39 @@ export const asyncRouterMap = [
     ]
   },
 
+  {
+    path: '/testresult',
+    component: Layout,
+    redirect: '/testresult/testresultList',
+    name: 'testresult',
+    meta: {
+      title: 'testresult',
+      icon: 'tab'
+    },
+    children: [
+      { path: 'compare', component: () => import('@/views/testresult/compare'), name: 'compare', meta: { title: 'compare', icon: 'chart' }},
+      { path: 'compareTestresult/:id(\\d+)', component: () => import('@/views/testresult/compareTestresult'), name: 'compareTestresult', meta: { title: 'compareTestresult', noCache: true }, hidden: true },
+      { path: 'testresultDetail/:id(\\d+)', component: () => import('@/views/testresult/testresultDetail'), name: 'testresultDetail', meta: { title: 'testresultDetail', noCache: true }, hidden: true },
+      { path: 'testresultList', component: () => import('@/views/testresult/testresultList'), name: 'testresultList', meta: { title: 'testresultList', icon: 'list' }}
+    ]
+  },
+
+  {
+    path: '/user',
+    component: Layout,
+    redirect: '/user/userList',
+    name: 'user',
+    meta: {
+      title: 'user',
+      icon: 'email'
+    },
+    children: [
+      { path: 'createUser', component: () => import('@/views/user/createUser'), name: 'createUser', meta: { title: 'createUser', icon: 'edit' }},
+      { path: 'editUser/:id(\\d+)', component: () => import('@/views/user/editUser'), name: 'editUser', meta: { title: 'editUser', noCache: true }, hidden: true },
+      { path: 'userList', component: () => import('@/views/user/userList'), name: 'userList', meta: { title: 'userList', icon: 'list' }}
+    ]
+  },
+
   /* {
     path: '/permission',
     component: Layout,

@@ -75,13 +75,13 @@
         </template>
       </el-table-column>
 
-      <el-table-column   :show-overflow-tooltip="true" width="auto" align="center" label="经营范围">
+      <el-table-column   width="auto" align="center" label="经营范围">
         <template slot-scope="scope">
-          <!--<el-tooltip  placement="top">
+          <!--<el-tooltip placement="top">
             <div slot="content">{{scope.row.businessMajor}}</div>
             <span style="width:200px;text-overflow:ellipsis; white-space:nowrap; overflow:hidden;" >{{scope.row.businessMajor}}</span>
           </el-tooltip>-->
-          <span >{{scope.row.businessMajor}}</span>
+          <span style="width:200px;text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">{{scope.row.businessMajor}}</span>
         </template>
       </el-table-column>
 
@@ -217,9 +217,9 @@
     top: 10px;
   }
 
-  .el-tooltip__popper.is-dark{
+  /*.el-tooltip__popper.is-dark{
     width: 300px !important;
     background-color: #68af40;
-  }
+  }*/
 
 </style>

@@ -40,20 +40,20 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+// import { isvalidUsername } from '@/utils/validate'
 import LangSelect from '@/components/LangSelect'
 
 export default {
   components: { LangSelect },
   name: 'login',
   data() {
-    const validateAccount = (rule, value, callback) => {
+    /* const validateAccount = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
         callback(new Error('请正确输入你的账号密码'))
       } else {
         callback()
       }
-    }
+    }*/
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
         callback(new Error('密码不能小于6位'))
@@ -67,7 +67,7 @@ export default {
         password: ''
       },
       loginRules: {
-        account: [{ required: true, trigger: 'blur', validator: validateAccount }],
+        /* account: [{ required: true, trigger: 'blur', validator: validateAccount }],*/
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
