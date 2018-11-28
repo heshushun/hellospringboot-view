@@ -10,9 +10,9 @@ export function userList(query) {
 
 export function deleteById(data) {
   return request({
-    url: '/user/deleteUserById',
+    url: '/user/delete',
     method: 'post',
-    data
+    params: data
   })
 }
 
@@ -26,8 +26,32 @@ export function createUser(data) {
 
 export function fetchUser(id) {
   return request({
-    url: '/user/getUserById',
+    url: '/user/get',
     method: 'get',
-    params: { 'userId': id }
+    params: { 'id': id }
+  })
+}
+
+export function updateUser(data) {
+  return request({
+    url: '/user/update',
+    method: 'post',
+    data
+  })
+}
+
+export function updateStatus(data) {
+  return request({
+    url: '/user/updateStatus',
+    method: 'post',
+    data
+  })
+}
+
+export function resetPassword(data) {
+  return request({
+    url: '/user/resetPassword',
+    method: 'post',
+    params: data
   })
 }

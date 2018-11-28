@@ -10,46 +10,89 @@
 
         <div class="postInfo-container">
           <el-row>
-            <el-col :span="21">
-              <el-form-item  label-width="100px" label="是否启用：" prop="taskStatus" class="postInfo-container-item">
-                <el-select v-model="postForm.taskStatus"  clearable filterable remote placeholder="是否启用">
-                  <el-option v-for="item in taskStatus" :key="item.id"  :label="item.name" :value="item.id">
+            <el-col :span="10" style="margin-right: 40px;">
+              <el-form-item style="margin-bottom: 40px;" prop="account">
+                <el-input  v-model="postForm.account" required :maxlength="20">
+                  <template slot="prepend">账号</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item style="margin-bottom: 40px;" prop="name">
+                <el-input v-model="postForm.name" required :maxlength="40">
+                  <template slot="prepend">用户名</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+        </el-row>
+
+          <el-row>
+            <el-col :span="10" style="margin-right: 40px;">
+              <el-form-item style="margin-bottom: 40px;" prop="password">
+                <el-input  v-model="postForm.password" required :maxlength="30">
+                  <template slot="prepend">密码</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="10" style="margin-right: 40px;">
+              <el-form-item style="margin-bottom: 40px;" prop="age">
+                <el-input  v-model="postForm.age" required :maxlength="20">
+                  <template slot="prepend">年龄</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item style="margin-bottom: 40px;" prop="wechat">
+                <el-input  v-model="postForm.wechat" required :maxlength="40">
+                  <template slot="prepend">微信</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="10" style="margin-right: 40px;">
+              <el-form-item style="margin-bottom: 40px;" prop="account">
+                <el-select v-model="postForm.sex"  clearable filterable remote placeholder="性别">
+                  <el-option v-for="item in sexs" :key="item"  :label="item" :value="item">
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="10">
+              <el-form-item style="margin-bottom: 40px;" prop="departmentId">
+                <el-select v-model="postForm.departmentId"  clearable filterable remote placeholder="部门">
+                  <el-option v-for="item in department" :key="item.id"  :label="item.name" :value="item.id">
                   </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
+
         </div>
 
-        <el-row>
-          <el-col :span="21">
+        <div style="margin-top: 20px; " class="upload">
+          <el-form-item>
+            <el-button type="primary" icon="upload" style="position: absolute;margin-left: 0px;" @click="imagecropperShow=true">上传头像
+            </el-button>
+          </el-form-item>
+        </div>
+        <el-form-item  prop="portrait">
+          <div class="image-preview">
+            <div class="image-preview-wrapper" v-show="imageUrl.length>1">
+              <img :src="imageUrl" v-model="postForm.portrait" >
+              <div class="image-preview-action">
+                <i @click="rmImage" class="el-icon-delete"></i>
+              </div>
+            </div>
+          </div>
+          <image-cropper :width="300" :height="300" url="http://127.0.0.1:7003/img/upload" @close='close' @crop-upload-success="cropSuccess" langType="en"
+                         :key="imagecropperKey" v-show="imagecropperShow"></image-cropper>
+        </el-form-item>
 
-            <el-form-item style="margin-bottom: 40px;" prop="taskName">
-              <MDinput name="taskName" v-model="postForm.taskName"  required :maxlength="100">
-                任务名称
-              </MDinput>
-            </el-form-item>
-
-            <el-form-item style="margin-bottom: 40px;" prop="taskExeClass">
-              <MDinput name="taskExeClass" v-model="postForm.taskExeClass"  required :maxlength="100">
-                执行类
-              </MDinput>
-            </el-form-item>
-
-            <el-form-item style="margin-bottom: 40px;" prop="taskExeMethod" >
-              <MDinput name="taskExeMethod" v-model="postForm.taskExeMethod"  required :maxlength="50">
-                执行方法
-              </MDinput>
-            </el-form-item>
-
-            <el-form-item style="margin-bottom: 40px;" prop="taskCron" >
-              <MDinput name="taskCron" v-model="postForm.taskCron"  required :maxlength="50">
-                执行时间
-              </MDinput>
-            </el-form-item>
-
-          </el-col>
-        </el-row>
 
       </div>
     </el-form>
@@ -60,22 +103,27 @@
 <script>
   import Tinymce from '@/components/Tinymce'
   import MDinput from '@/components/MDinput'
+  import Upload from '@/components/Upload/singleImage3'
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   import Sticky from '@/components/Sticky' // 粘性header组件
-  import { createTask, fetchTask, updateTask } from '@/api/task'
+  import { createUser, fetchUser, updateUser } from '@/api/user'
+  import ImageCropper from '@/components/ImageCropper'
 
   const defaultForm = {
-    taskName: '', // 任务名
-    taskExeClass: '', // 执行类
-    taskExeMethod: '', // 执行方法
-    taskCron: '', // 执行时间
-    taskStatus: '' // 是否启用
+    account: '', // 账号
+    name: '', // 用户名
+    password: '', // 密码
+    sex: '', // 性别
+    departmentId: '', // 部门
+    age: '', // 年龄
+    wechat: '', // 微信
+    portrait: '' // 头像
   }
 
   export default {
     name: 'userDetail',
-    components: { Tinymce, MDinput, Multiselect, Sticky },
+    components: { Tinymce, MDinput, Multiselect, Sticky, ImageCropper, Upload },
     props: {
       isEdit: {
         type: Boolean,
@@ -83,50 +131,50 @@
       }
     },
     data() {
-      const validateTaskName = (rule, value, callback) => {
+      const validateName = (rule, value, callback) => {
         if (value === '') {
           this.$message({
-            message: '任务名为必传项',
+            message: '用户名为必传项',
             type: 'error'
           })
         } else {
           callback()
         }
       }
-      const validateTaskExeMethod = (rule, value, callback) => {
+      const validateAccount = (rule, value, callback) => {
         if (value === '') {
           this.$message({
-            message: '任务执行方法为必传项',
+            message: '账号为必传项',
             type: 'error'
           })
         } else {
           callback()
         }
       }
-      const validateTaskExeClass = (rule, value, callback) => {
+      const validatePassword = (rule, value, callback) => {
         if (value === '') {
           this.$message({
-            message: '任务执行类为必传项',
+            message: '密码为必传项',
             type: 'error'
           })
         } else {
           callback()
         }
       }
-      const validateTaskCron = (rule, value, callback) => {
+      const validateDepartmentId = (rule, value, callback) => {
         if (value === '') {
           this.$message({
-            message: '任务执行时间为必传项',
+            message: '部门为必传项',
             type: 'error'
           })
         } else {
           callback()
         }
       }
-      const validateTaskStatus = (rule, value, callback) => {
+      const validatePortrait = (rule, value, callback) => {
         if (value === '') {
           this.$message({
-            message: '任务是否启用为必传项',
+            message: '头像为必传项',
             type: 'error'
           })
         } else {
@@ -135,19 +183,25 @@
       }
 
       return {
+        imagecropperShow: false,
+        imagecropperKey: 0,
         postForm: Object.assign({}, defaultForm),
         loading: false,
-        taskStatus: [{ id: '1', name: '是' }, { id: '0', name: '否' }],
+        department: [{ id: '1', name: '平台测试部' }, { id: '2', name: '资管测试部' }, { id: '3', name: '经纪测试部' }, { id: '4', name: '银行测试部' }, { id: '5', name: '交易所测试部' }],
+        sexs: ['男', '女'],
         rules: {
-          taskName: [{ required: true, trigger: 'blur', validator: validateTaskName }],
-          taskExeClass: [{ required: true, trigger: 'blur', validator: validateTaskExeClass }],
-          taskExeMethod: [{ required: true, trigger: 'blur', validator: validateTaskExeMethod }],
-          taskCron: [{ required: true, trigger: 'blur', validator: validateTaskCron }],
-          taskStatus: [{ required: true, trigger: 'change', validator: validateTaskStatus }]
+          name: [{ required: true, trigger: 'blur', validator: validateName }],
+          account: [{ required: true, trigger: 'blur', validator: validateAccount }],
+          password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+          departmentId: [{ required: true, trigger: 'blur', validator: validateDepartmentId }],
+          portrait: [{ required: true, trigger: 'change', validator: validatePortrait }]
         }
       }
     },
     computed: {
+      imageUrl() {
+        return this.postForm.portrait
+      }
     },
     created() {
       if (this.isEdit) {
@@ -158,9 +212,21 @@
       }
     },
     methods: {
+      rmImage() {
+        this.postForm.portrait = ''
+      },
+      cropSuccess(resData) {
+        this.imagecropperShow = false
+        this.imagecropperKey = this.imagecropperKey + 1
+        this.postForm.portrait = resData.data
+      },
+      close() {
+        this.imagecropperShow = false
+      },
       fetchData(id) {
-        fetchTask(id).then(response => {
+        fetchUser(id).then(response => {
           this.postForm = response.data.data
+          this.postForm.departmentId = this.department[this.postForm.departmentId - 1].id
         }).catch(err => {
           console.log(err)
         })
@@ -170,7 +236,7 @@
           if (valid) {
             this.loading = true
             if (this.isEdit) {
-              updateTask(this.postForm).then(response => {
+              updateUser(this.postForm).then(response => {
                 console.log(response)
                 if (response.data.success) {
                   this.$notify({
@@ -184,7 +250,7 @@
                 console.log(err)
               })
             } else {
-              createTask(this.postForm).then(response => {
+              createUser(this.postForm).then(response => {
                 if (response.data.success) {
                   this.$notify({
                     title: '成功',
@@ -242,4 +308,67 @@
       top: 0px;
     }
   }
+
+
+  .image-preview {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    border: 1px dashed #d9d9d9;
+    float: left;
+    margin-left: 0px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+    .image-preview-wrapper {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .image-preview-action {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      cursor: default;
+      text-align: center;
+      color: #fff;
+      opacity: 0;
+      font-size: 20px;
+      background-color: rgba(0, 0, 0, .5);
+      transition: opacity .3s;
+      cursor: pointer;
+      text-align: center;
+      line-height: 200px;
+      .el-icon-delete {
+        font-size: 36px;
+      }
+    }
+    &:hover {
+      .image-preview-action {
+        opacity: 1;
+      }
+    }
+  }
+  .image-app-preview {
+    width: 320px;
+    height: 180px;
+    position: relative;
+    border: 1px dashed #d9d9d9;
+    float: left;
+    margin-left: 50px;
+    .app-fake-conver {
+      height: 44px;
+      position: absolute;
+      width: 100%; // background: rgba(0, 0, 0, .1);
+      text-align: center;
+      line-height: 64px;
+      color: #fff;
+    }
+  }
+
 </style>
