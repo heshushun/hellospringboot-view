@@ -55,3 +55,19 @@ export function resetPassword(data) {
     params: data
   })
 }
+
+export function selectByAccount(data) {
+  return request({
+    url: '/user/selectByAccount',
+    method: 'get',
+    params: data
+  })
+}
+
+export function updatePass(data) {
+  return request({
+    url: '/user/updatePass',
+    method: 'post',
+    params: data
+  })
+}

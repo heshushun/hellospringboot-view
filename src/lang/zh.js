@@ -44,6 +44,9 @@ export default {
     userList: '用户列表',
     createUser: '创建用户',
     editUser: '修改用户',
+    userInfo: '个人中心',
+    updatePass: '修改密码',
+    chat: '好友聊天',
     newsList: '新闻列表',
     createNews: '创建新闻',
     editNews: '修改新闻',
@@ -102,6 +105,8 @@ export default {
   navbar: {
     logOut: '退出登录',
     dashboard: '首页',
+    userInfo: '个人中心',
+    updatePass: '修改密码',
     screenfull: '全屏',
     theme: '换肤'
   },

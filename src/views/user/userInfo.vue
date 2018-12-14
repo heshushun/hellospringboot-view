@@ -3,16 +3,17 @@
     <el-form class="form-container" :model="postForm" :rules="rules" ref="postForm">
 
       <sticky :className="'sub-navbar '">
-        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">提交</el-button>
+        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">提交修改</el-button>
       </sticky>
 
       <div class="createPost-main-container">
 
         <div class="postInfo-container">
+
           <el-row>
             <el-col :span="10" style="margin-right: 40px;">
               <el-form-item style="margin-bottom: 40px;" prop="account">
-                <el-input  v-model="postForm.account" required :maxlength="20">
+                <el-input :disabled="true"  v-model="postForm.account" required :maxlength="20">
                   <template slot="prepend">账号</template>
                 </el-input>
               </el-form-item>
@@ -21,16 +22,6 @@
               <el-form-item style="margin-bottom: 40px;" prop="name">
                 <el-input v-model="postForm.name" required :maxlength="40">
                   <template slot="prepend">用户名</template>
-                </el-input>
-              </el-form-item>
-            </el-col>
-        </el-row>
-
-          <el-row>
-            <el-col :span="10" style="margin-right: 40px;">
-              <el-form-item style="margin-bottom: 40px;" prop="password">
-                <el-input  v-model="postForm.password" required :maxlength="30">
-                  <template slot="prepend">密码</template>
                 </el-input>
               </el-form-item>
             </el-col>
@@ -98,8 +89,8 @@
 
       </div>
     </el-form>
-
   </div>
+
 </template>
 
 <script>
@@ -109,7 +100,7 @@
   import Multiselect from 'vue-multiselect'// 使用的一个多选框组件，element-ui的select不能满足所有需求
   import 'vue-multiselect/dist/vue-multiselect.min.css'// 多选框组件css
   import Sticky from '@/components/Sticky' // 粘性header组件
-  import { createUser, fetchUser, updateUser } from '@/api/user'
+  import { selectByAccount, updateUser } from '@/api/user'
   import ImageCropper from '@/components/ImageCropper'
 
   const defaultForm = {
@@ -124,7 +115,7 @@
   }
 
   export default {
-    name: 'userDetail',
+    name: 'userInfo',
     components: { Tinymce, MDinput, Multiselect, Sticky, ImageCropper, Upload },
     props: {
       isEdit: {
@@ -137,26 +128,6 @@
         if (value === '') {
           this.$message({
             message: '用户名为必传项',
-            type: 'error'
-          })
-        } else {
-          callback()
-        }
-      }
-      const validateAccount = (rule, value, callback) => {
-        if (value === '') {
-          this.$message({
-            message: '账号为必传项',
-            type: 'error'
-          })
-        } else {
-          callback()
-        }
-      }
-      const validatePassword = (rule, value, callback) => {
-        if (value === '') {
-          this.$message({
-            message: '密码为必传项',
             type: 'error'
           })
         } else {
@@ -193,8 +164,6 @@
         sexs: ['男', '女'],
         rules: {
           name: [{ required: true, trigger: 'blur', validator: validateName }],
-          account: [{ required: true, trigger: 'blur', validator: validateAccount }],
-          password: [{ required: true, trigger: 'blur', validator: validatePassword }],
           departmentId: [{ required: true, trigger: 'blur', validator: validateDepartmentId }],
           portrait: [{ required: true, trigger: 'change', validator: validatePortrait }]
         }
@@ -206,12 +175,8 @@
       }
     },
     created() {
-      if (this.isEdit) {
-        const id = this.$route.params && this.$route.params.id
-        this.fetchData(id)
-      } else {
-        this.postForm = Object.assign({}, defaultForm)
-      }
+      const id = this.$route.params && this.$route.params.id
+      this.fetchData(id)
     },
     methods: {
       rmImage() {
@@ -226,7 +191,7 @@
         this.imagecropperShow = false
       },
       fetchData(id) {
-        fetchUser(id).then(response => {
+        selectByAccount(id).then(response => {
           this.postForm = response.data.data
           this.postForm.departmentId = this.department[this.postForm.departmentId - 1].id
         }).catch(err => {
@@ -237,34 +202,19 @@
         this.$refs.postForm.validate(valid => {
           if (valid) {
             this.loading = true
-            if (this.isEdit) {
-              updateUser(this.postForm).then(response => {
-                console.log(response)
-                if (response.data.success) {
-                  this.$notify({
-                    title: '成功',
-                    message: '更新成功',
-                    type: 'success',
-                    duration: 2000
-                  })
-                }
-              }).catch(err => {
-                console.log(err)
-              })
-            } else {
-              createUser(this.postForm).then(response => {
-                if (response.data.success) {
-                  this.$notify({
-                    title: '成功',
-                    message: '提交成功',
-                    type: 'success',
-                    duration: 2000
-                  })
-                }
-              }).catch(err => {
-                console.log(err)
-              })
-            }
+            updateUser(this.postForm).then(response => {
+              // console.log(response)
+              if (response.data.success) {
+                this.$notify({
+                  title: '成功',
+                  message: '修改资料成功',
+                  type: 'success',
+                  duration: 2000
+                })
+              }
+            }).catch(err => {
+              console.log(err)
+            })
             this.loading = false
           } else {
             console.log('error submit!!')

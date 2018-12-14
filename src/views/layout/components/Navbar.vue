@@ -1,4 +1,5 @@
 <template>
+
   <el-menu class="navbar" mode="horizontal">
 
     <!-- 导航栏缩进按钮 -->
@@ -30,27 +31,42 @@
 
         <!-- 头像 -->
         <div class="avatar-wrapper">
-          <img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">
+          <!--<img class="user-avatar" :src="avatar+'?imageView2/1/w/80/h/80'">-->
+          <img class="user-avatar" :src="imageUrl">
           <i class="el-icon-caret-bottom"></i>
         </div>
 
         <!-- 个人信息下拉框 -->
         <el-dropdown-menu slot="dropdown">
+
           <router-link to="/">
             <el-dropdown-item>
               {{$t('navbar.dashboard')}}
             </el-dropdown-item>
           </router-link>
+          <router-link to="/user/userInfo">
+            <el-dropdown-item>
+              {{$t('navbar.userInfo')}}
+            </el-dropdown-item>
+          </router-link>
+          <router-link to="/user/updatePass">
+            <el-dropdown-item>
+              {{$t('navbar.updatePass')}}
+            </el-dropdown-item>
+          </router-link>
           <el-dropdown-item divided>
             <span @click="logout" style="display:block;">{{$t('navbar.logOut')}}</span>
           </el-dropdown-item>
+
         </el-dropdown-menu>
 
       </el-dropdown>
 
     </div>
   </el-menu>
+
 </template>
+
 
 <script>
 import { mapGetters } from 'vuex' // 获取头像姓名等
@@ -60,8 +76,15 @@ import ErrorLog from '@/components/ErrorLog' // 错误日志 插件
 import Screenfull from '@/components/Screenfull' // 全屏按钮 插件
 import LangSelect from '@/components/LangSelect' // 国际化语言选择 插件
 import ThemePicker from '@/components/ThemePicker' // 主题选择 插件
+import { selectByAccount } from '@/api/user'
 
 export default {
+  data() {
+    return {
+      portrait: 'http://127.0.0.1:8081/image/20181128/7b8efe4ac826780.png',
+      account: ''
+    }
+  },
   components: {
     Breadcrumb,
     Hamburger,
@@ -70,7 +93,13 @@ export default {
     LangSelect,
     ThemePicker
   },
+  created() {
+    this.getPortrait()
+  },
   computed: {
+    imageUrl() {
+      return this.portrait
+    },
     ...mapGetters([
       'sidebar',
       'name',
@@ -78,6 +107,14 @@ export default {
     ])
   },
   methods: {
+    getPortrait() {
+      selectByAccount().then(response => {
+        this.portrait = response.data.data.portrait
+        this.account = response.data.data.account
+        // console.log(this.account)
+      }).catch(() => {
+      })
+    },
     toggleSideBar() {
       this.$store.dispatch('toggleSideBar')
     },

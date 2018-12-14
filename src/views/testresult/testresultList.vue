@@ -49,7 +49,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column  width="200px" align="center" label="请求描述">
+      <el-table-column :show-overflow-tooltip="true" width="200px" align="center" label="请求描述">
         <template slot-scope="scope">
           <span style="width:200px;text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">{{scope.row.requestMsg}}</span>
         </template>
@@ -118,7 +118,7 @@
 <script>
   import { testresultList, projectList, exportTestResult, getExportList } from '@/api/testresult'
   import { parseTime } from '@/utils' // 导出
-  import axios from 'axios'
+  // import axios from 'axios'
 
   export default {
     name: 'testresultList',

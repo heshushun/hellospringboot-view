@@ -91,9 +91,23 @@ export const asyncRouterMap = [
       icon: 'tab'
     },
     children: [
-      { path: 'companyList', component: () => import('@/views/company/companyList'), name: 'companyList', meta: { title: 'companyList', icon: 'list' }}
+      { path: 'companyList', component: () => import('@/views/company/companyList'), name: 'companyList', meta: { title: 'companyList', icon: 'peoples' }}
     ]
   },
+
+  /* {
+    path: '/json-view',
+    component: Layout,
+    redirect: '/json/json-view',
+    name: 'json-view',
+    meta: {
+      title: 'json',
+      icon: 'example'
+    },
+    children: [
+      { path: 'json-view', component: () => import('@/views/json/json-view'), name: 'json-view', meta: { title: 'json-view', icon: 'example' }}
+    ]
+  },*/
 
   {
     path: '/testresult',
@@ -119,12 +133,28 @@ export const asyncRouterMap = [
     name: 'user',
     meta: {
       title: 'user',
-      icon: 'email'
+      icon: 'user'
     },
     children: [
       { path: 'createUser', component: () => import('@/views/user/createUser'), name: 'createUser', meta: { title: 'createUser', icon: 'edit' }},
       { path: 'editUser/:id(\\d+)', component: () => import('@/views/user/editUser'), name: 'editUser', meta: { title: 'editUser', noCache: true }, hidden: true },
+      { path: 'userInfo', component: () => import('@/views/user/userInfo'), name: 'userInfo', meta: { title: 'userInfo' }, hidden: true },
+      { path: 'updatePass', component: () => import('@/views/user/updatePass'), name: 'updatePass', meta: { title: 'updatePass' }, hidden: true },
       { path: 'userList', component: () => import('@/views/user/userList'), name: 'userList', meta: { title: 'userList', icon: 'list' }}
+    ]
+  },
+
+  {
+    path: '/chat',
+    component: Layout,
+    redirect: '/chat/chat',
+    name: 'chat',
+    meta: {
+      title: 'chat',
+      icon: 'wechat'
+    },
+    children: [
+      { path: 'chat', component: () => import('@/views/chat/chat'), name: 'chat', meta: { title: 'chat', icon: 'wechat' }}
     ]
   },
 

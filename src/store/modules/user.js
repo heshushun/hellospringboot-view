@@ -2,6 +2,7 @@ import { loginByUsername, logout, getUserInfo } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { Message } from 'element-ui'
 import avator from '@/assets/avator/avator.png'
+import { selectByAccount } from '@/api/user'
 
 const user = {
   state: {
@@ -10,6 +11,8 @@ const user = {
     code: '',
     token: getToken(),
     name: '',
+    portrait: '',
+    account: '',
     avatar: '',
     introduction: '',
     roles: [],
@@ -40,6 +43,12 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
+    SET_PORTRAIT: (state, portrait) => {
+      state.portrait = portrait
+    },
+    SET_ACCOUNT: (state, account) => {
+      state.account = account
+    },
     SET_ROLES: (state, roles) => {
       state.roles = roles
     }
@@ -48,6 +57,7 @@ const user = {
   actions: {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
+      const that = this
       const account = userInfo.account.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(account, userInfo.password).then(response => { // 调用 login.js
@@ -62,7 +72,9 @@ const user = {
           } else {
             commit('SET_TOKEN', data.data.Token)
             setToken(data.data.Token)
+            commit('SET_ACCOUNT', account)
             resolve()
+            that.dispatch('connect')
           }
         }).catch(error => {
           reject(error)
@@ -73,12 +85,28 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        commit('SET_ROLES', ['admin'])
-        commit('SET_NAME', 'admin')
-        commit('SET_AVATAR', avator)
-        commit('SET_INTRODUCTION', '认证负责')
-        const response = ['aa']
-        resolve(response)
+        selectByAccount(state.user.account).then(response => { // 调用 根据账号获取用户信息
+          const data = response.data
+          if (data.code === 'BIZ-400') {
+            Message({
+              message: data.message,
+              type: 'error',
+              duration: 2 * 1000
+            })
+            reject(data.message)
+          } else {
+            commit('SET_NAME', data.data.name)
+            commit('SET_ACCOUNT', data.data.account)
+            commit('SET_PORTRAIT', data.data.portrait)
+            commit('SET_ROLES', ['admin'])
+            commit('SET_AVATAR', avator)
+            commit('SET_INTRODUCTION', '认证负责')
+            const response = ['aa']
+            resolve(response)
+          }
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
 

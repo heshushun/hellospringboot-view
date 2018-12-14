@@ -49,9 +49,13 @@
     "vue-code-diff": "^0.0.4",
     "vue-count-to": "1.0.13",
     "vue-i18n": "7.3.2",
+    "vue-json-tree": "^0.3.3",
+    "vue-json-tree-view": "^2.1.4",
+    "vue-json-viewer": "^2.0.6",
     "vue-multiselect": "2.0.8",
     "vue-router": "3.0.1",
     "vue-splitpane": "1.0.2",
+    "vue-stomp": "0.0.5",
     "vuedraggable": "^2.16.0",
     "vuex": "3.0.1",
     "xlsx": "^0.11.16"

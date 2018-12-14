@@ -57,7 +57,7 @@
               <el-input
                 readonly="true"
                 type="textarea"
-                :autosize="{ minRows: 2, maxRows: 6}"
+                :autosize="{ minRows: 2, maxRows: 20}"
                 placeholder="预期结果"
                 v-model="postForm.expectResult">
               </el-input>
@@ -67,7 +67,7 @@
               <el-input
                 readonly="true"
                 type="textarea"
-                :autosize="{ minRows: 2, maxRows: 6}"
+                :autosize="{ minRows: 2, maxRows: 20}"
                 placeholder="响应结果"
                 v-model="postForm.responceResult">
               </el-input>

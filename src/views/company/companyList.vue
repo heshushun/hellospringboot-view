@@ -33,7 +33,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column :show-overflow-tooltip="true" width="200px" align="center" label="公司名称">
+      <el-table-column :show-overflow-tooltip="true" width="210px" align="center" label="公司名称">
         <template slot-scope="scope">
           <span >{{scope.row.name}}</span>
         </template>

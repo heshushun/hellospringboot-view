@@ -10,13 +10,13 @@
 
             <el-col :span="12">
               <el-form-item >
-                <el-input v-model="oldStr" type="textarea" :autosize="{minRows: 10, maxRows: 15}" placeholder="请输入旧数据"></el-input>
+                <el-input v-model="oldStr" type="textarea" :autosize="{minRows: 10, maxRows: 20}" placeholder="请输入旧数据"></el-input>
               </el-form-item>
             </el-col>
 
             <el-col :span="12">
               <el-form-item >
-                <el-input v-model="newStr" type="textarea" :autosize="{minRows: 10, maxRows: 15}" placeholder="请输入新数据"></el-input>
+                <el-input v-model="newStr" type="textarea" :autosize="{minRows: 10, maxRows: 20}" placeholder="请输入新数据"></el-input>
               </el-form-item>
             </el-col>
 
