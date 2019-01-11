@@ -122,7 +122,8 @@ export const asyncRouterMap = [
       { path: 'compare', component: () => import('@/views/testresult/compare'), name: 'compare', meta: { title: 'compare', icon: 'chart' }},
       { path: 'compareTestresult/:id(\\d+)', component: () => import('@/views/testresult/compareTestresult'), name: 'compareTestresult', meta: { title: 'compareTestresult', noCache: true }, hidden: true },
       { path: 'testresultDetail/:id(\\d+)', component: () => import('@/views/testresult/testresultDetail'), name: 'testresultDetail', meta: { title: 'testresultDetail', noCache: true }, hidden: true },
-      { path: 'testresultList', component: () => import('@/views/testresult/testresultList'), name: 'testresultList', meta: { title: 'testresultList', icon: 'list' }}
+      { path: 'testresultList', component: () => import('@/views/testresult/testresultList'), name: 'testresultList', meta: { title: 'testresultList', icon: 'list' }},
+      { path: 'jmeterList', component: () => import('@/views/jmeter/jmeterList'), name: 'jmeterList', meta: { title: 'jmeterList', icon: 'form' }}
     ]
   },
 

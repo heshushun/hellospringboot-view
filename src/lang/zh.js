@@ -40,6 +40,7 @@ export default {
     compareTestresult: '比对结果',
     testresultDetail: '结果详情',
     testresultList: '测试结果',
+    jmeterList: '脚本列表',
     user: '用户管理',
     userList: '用户列表',
     createUser: '创建用户',
