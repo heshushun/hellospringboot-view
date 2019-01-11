@@ -27,9 +27,10 @@
       </el-select>
 
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary"  icon="el-icon-search" >{{$t('table.search')}}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-refresh">{{'刷新'}}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-refresh">{{$t('table.refresh')}}</el-button>
       <!--<el-button class="filter-item" style="margin-left: 10px;" @click="handleDownload"  type="primary" :loading="downloadLoading"  icon="el-icon-download" >{{$t('table.export')}}2</el-button>-->
       <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel"  type="primary"   icon="el-icon-download" >{{$t('table.export')}}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="deleteTestresult"  type="danger"   icon="el-icon-delete" >{{$t('table.clean')}}</el-button>
     </div>
 
 
@@ -133,8 +134,8 @@
 </template>
 
 <script>
-  // import { testresultList, projectList, exportTestResult, getExportList } from '@/api/testresult'
-  import { testresultList, projectList, TsList, getExportList } from '@/api/testresult'
+  // import { testresultList, projectList, exportTestResult, getExportList, delTestresult } from '@/api/testresult'
+  import { testresultList, projectList, TsList, getExportList, delTestresult } from '@/api/testresult'
   import codeDiff from 'vue-code-diff'
   import { parseTime } from '@/utils' // 导出
   // import axios from 'axios'
@@ -216,6 +217,31 @@
             type: 'error'
           })
         })
+      },
+      deleteTestresult() {
+        this.$confirm('此操作将永久删除查询到的数据, 是否继续?', '提示', { type: 'warning' })
+          .then(() => {
+            delTestresult(Object.assign({}, { 'group1': this.listQuery.group1, 'project': this.listQuery.project,
+              'responceCode': this.listQuery.responceCode, 'status': this.listQuery.status })).then(response => {
+              if (response.data.success) {
+                this.$message({
+                  message: '删除所选择数据成功！',
+                  type: 'success'
+                })
+              }
+              this.getList()
+              this.getProjectList()
+              this.getTsList()
+            }).catch((err) => {
+              this.$message({
+                message: '删除失败...',
+                type: 'error'
+              })
+              console.log(err)
+            })
+          }).catch(() => {
+            this.$message.info('已取消删除!')
+          })
       },
       getExportList() {
         getExportList(Object.assign({}, { 'group1': this.listQuery.group1, 'project': this.listQuery.project,

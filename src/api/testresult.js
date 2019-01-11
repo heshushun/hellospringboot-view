@@ -47,3 +47,11 @@ export function exportTestResult(query) {
     responseType: 'blob' // 二进制流
   })
 }
+
+export function delTestresult(data) {
+  return request({
+    url: '/testresult/delTestresult',
+    method: 'post',
+    data
+  })
+}

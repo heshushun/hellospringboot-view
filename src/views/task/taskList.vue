@@ -19,9 +19,9 @@
       </el-select>
 
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary"  icon="el-icon-search" >{{$t('table.search')}}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-refresh">{{'刷新'}}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-refresh">{{$t('table.refresh')}}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleDownload"  type="primary" :loading="downloadLoading"  icon="el-icon-download" >{{$t('table.export')}}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleInit" type="success" icon="el-icon-star-on">{{'初始化'}}</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" @click="handleInit" type="success" icon="el-icon-star-on">{{$t('table.init')}}</el-button>
     </div>
 
 

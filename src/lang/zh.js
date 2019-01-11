@@ -163,6 +163,9 @@ export default {
     publish: '发布',
     draft: '草稿',
     delete: '删除',
+    refresh: '刷新',
+    init: '初始化',
+    clean: '清空',
     cancel: '取 消',
     confirm: '确 定'
   },
