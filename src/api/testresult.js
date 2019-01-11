@@ -16,6 +16,13 @@ export function projectList() {
   })
 }
 
+export function TsList() {
+  return request({
+    url: '/testresult/getTsList',
+    method: 'get'
+  })
+}
+
 export function getExportList(query) {
   return request({
     url: '/testresult/getTestresultList',

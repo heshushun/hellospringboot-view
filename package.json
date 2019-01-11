@@ -53,6 +53,7 @@
     "vue-json-tree-view": "^2.1.4",
     "vue-json-viewer": "^2.0.6",
     "vue-multiselect": "2.0.8",
+    "vue-resource": "^1.5.1",
     "vue-router": "3.0.1",
     "vue-splitpane": "1.0.2",
     "vue-stomp": "0.0.5",

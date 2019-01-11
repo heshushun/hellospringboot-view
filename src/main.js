@@ -19,10 +19,14 @@ import './mock' // simulation data
 
 import * as filters from './filters' // global filters
 
+import VueResource from 'vue-resource'
+
 Vue.use(Element, {
   size: 'medium', // set element-ui default size
   i18n: (key, value) => i18n.t(key, value)
 })
+
+Vue.use(VueResource)
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

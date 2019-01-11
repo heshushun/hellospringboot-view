@@ -19,17 +19,33 @@
         </el-option>
       </el-select>
 
-      <el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;" class="filter-item" placeholder="输入：时间戳" v-model="listQuery.group1">
-      </el-input>
+      <!--<el-input @keyup.enter.native="handleFilter" clearable style="width: 200px;" class="filter-item" placeholder="输入：时间戳" v-model="listQuery.group1">
+      </el-input>-->
+      <el-select @change='handleFilter' clearable style="width: 200px" class="filter-item" placeholder="时间戳" v-model="listQuery.group1">
+        <el-option v-for="item in TsList" :key="item" :label="item" :value="item">
+        </el-option>
+      </el-select>
 
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleFilter" type="primary"  icon="el-icon-search" >{{$t('table.search')}}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-refresh">{{'刷新'}}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleDownload"  type="primary" :loading="downloadLoading"  icon="el-icon-download" >{{$t('table.export')}}</el-button>
-     <!-- <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel"  type="primary"   icon="el-icon-download" >{{$t('table.export')}}2</el-button>-->
+      <!--<el-button class="filter-item" style="margin-left: 10px;" @click="handleDownload"  type="primary" :loading="downloadLoading"  icon="el-icon-download" >{{$t('table.export')}}2</el-button>-->
+      <el-button class="filter-item" style="margin-left: 10px;" @click="exportExcel"  type="primary"   icon="el-icon-download" >{{$t('table.export')}}</el-button>
     </div>
 
 
     <el-table :data="list"  v-loading.body="listLoading" border fit highlight-current-row style="width: 100%">
+
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <el-form label-position="left" inline class="demo-table-expand">
+            <el-form-item label="请求描述：">
+              <span>{{ props.row.requestMsg }}</span>
+            </el-form-item>
+          </el-form>
+          <code-diff :old-string="props.row.expectResult" :new-string="props.row.responceResult"  :output-format="outputFormat" />
+        </template>
+      </el-table-column>
+
 
       <el-table-column align="center" label="ID" width="50px" v-if="this.show">
         <template slot-scope="scope">
@@ -49,7 +65,8 @@
         </template>
       </el-table-column>
 
-      <el-table-column :show-overflow-tooltip="true" width="200px" align="center" label="请求描述">
+      <!--:show-overflow-tooltip="true"-->
+      <el-table-column  width="250px" align="center" label="请求描述">
         <template slot-scope="scope">
           <span style="width:200px;text-overflow:ellipsis; white-space:nowrap; overflow:hidden;">{{scope.row.requestMsg}}</span>
         </template>
@@ -87,7 +104,7 @@
       </el-table-column>
 
 
-      <el-table-column align="center" label="操作" width="115">
+      <el-table-column align="center" label="操作" width="70">
         <template slot-scope="scope">
           <!--<el-button type="danger" size="mini" @click="deleteById(scope.row.id)" icon="el-icon-tickets" ></el-button>-->
           <router-link :to="'/testresult/testresultDetail/'+scope.row.id">
@@ -95,11 +112,11 @@
               <el-button type="primary" size="mini" icon="el-icon-tickets" ></el-button>
             </el-tooltip>
           </router-link>
-          <router-link :to="'/testresult/compareTestresult/'+scope.row.id">
+          <!--<router-link :to="'/testresult/compareTestresult/'+scope.row.id">
             <el-tooltip  effect="dark" content="比对" placement="top">
               <el-button type="success" size="mini" icon="el-icon-view" ></el-button>
             </el-tooltip>
-          </router-link>
+          </router-link>-->
         </template>
       </el-table-column>
 
@@ -116,12 +133,15 @@
 </template>
 
 <script>
-  import { testresultList, projectList, exportTestResult, getExportList } from '@/api/testresult'
+  // import { testresultList, projectList, exportTestResult, getExportList } from '@/api/testresult'
+  import { testresultList, projectList, TsList, getExportList } from '@/api/testresult'
+  import codeDiff from 'vue-code-diff'
   import { parseTime } from '@/utils' // 导出
   // import axios from 'axios'
 
   export default {
     name: 'testresultList',
+    components: { codeDiff },
     data() {
       return {
         show: false,
@@ -130,8 +150,10 @@
         listLoading: true,
         exportList: null,
         projectList: [],
+        TsList: [],
         responceCodeList: ['200', '500', '404', '503', '403'],
         statusList: ['pass', 'fail'],
+        fotmat: true,
         listQuery: {
           group1: '',
           project: '',
@@ -153,12 +175,15 @@
       }
     },
     computed: {
-
+      outputFormat() {
+        return this.fotmat ? 'line-by-line' : 'side-by-side'
+      }
     },
     created() {
       this.getList()
       this.getProjectList()
       this.getExportList()
+      this.getTsList()
     },
     methods: {
       getList() {
@@ -178,6 +203,16 @@
         }).catch(() => {
           this.$message({
             message: '项目列表加载失败...',
+            type: 'error'
+          })
+        })
+      },
+      getTsList() {
+        TsList().then(response => {
+          this.TsList = response.data.data
+        }).catch(() => {
+          this.$message({
+            message: '时间戳列表加载失败...',
             type: 'error'
           })
         })
@@ -208,7 +243,10 @@
       },
       handleCreate() {
         this.getList()
+        this.getTsList()
+        this.getProjectList()
       },
+      // 通过前端导出
       handleDownload() {
         this.downloadLoading = true
         import('@/vendor/Export2Excel').then(excel => {
@@ -232,12 +270,13 @@
           }
         }))
       },
+      // 通过后台导出excel
       exportExcel() {
-        // this.downloadLoading = true
-        exportTestResult({ 'fileName': 'testresult-list', 'group1': this.listQuery.group1, 'project': this.listQuery.project,
+        /* exportTestResult({ 'fileName': 'testresult-list', 'group1': this.listQuery.group1, 'project': this.listQuery.project,
           'responceCode': this.listQuery.responceCode, 'status': this.listQuery.status }).then((res) => {
-          // console.log(res)
-          const blob = new Blob([res.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=utf-8' })
+          console.log(res.data)
+          const blob = new Blob([res.data], { type: 'application/vnd.ms-excel;charset=utf-8' })
+          console.log(blob)
           const fileName = 'test.xls'
           if ('download' in document.createElement('a')) { // 非IE下载
             const elink = document.createElement('a')
@@ -251,7 +290,8 @@
           } else { // IE10+下载
             navigator.msSaveBlob(blob, fileName)
           }
-        })
+        })*/
+        location.href = 'http://127.0.0.1:7003/testresult/exportTestResult?status=' + this.listQuery.status + '&group1=' + this.listQuery.group1 + '&project=' + this.listQuery.project + '&responceCode=' + this.listQuery.responceCode
       }
     }
   }
@@ -272,5 +312,20 @@
     width: 50px !important;
     background-color: #68af40;
   }*/
+
+  /** 下拉 查看详情 */
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #bf7627;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 10px;
+    width: 100%;
+    color: #bf361c;
+  }
 
 </style>

@@ -14,9 +14,9 @@
       <error-log class="errLog-container right-menu-item"></error-log>
 
       <!-- 全屏按钮 -->
-      <el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
+      <!--<el-tooltip effect="dark" :content="$t('navbar.screenfull')" placement="bottom">
         <screenfull class="screenfull right-menu-item"></screenfull>
-      </el-tooltip>
+      </el-tooltip>-->
 
       <!-- 国际化按钮 -->
       <lang-select class="international right-menu-item"></lang-select>
